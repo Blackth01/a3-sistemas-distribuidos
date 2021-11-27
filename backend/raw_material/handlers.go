@@ -52,3 +52,35 @@ func GetRawMaterial(c echo.Context) error{
 
 	return c.JSON(http.StatusOK, raw)
 }
+
+func PutRawMaterial(c echo.Context) error{
+	ID, error := strconv.ParseUint(c.Param("id"), 10, 64)
+	if error != nil {
+		return c.JSON(http.StatusInternalServerError, "Error while converting id to integer!")
+	}
+
+    raw := new(raw_material)
+
+ 	if err := c.Bind(raw); err != nil {
+		return err
+	}
+
+    if err := UpdateRawMaterial(ID, raw); err != nil {
+    	return c.JSON(http.StatusInternalServerError, "Error while updating raw material!")
+    }
+
+    return c.JSON(http.StatusOK, "Raw material sucessfully updated!")
+}
+
+func RemoveRawMaterial(c echo.Context) error{
+	ID, error := strconv.ParseUint(c.Param("id"), 10, 64)
+	if error != nil {
+		return c.JSON(http.StatusInternalServerError, "Error while converting id to integer!")
+	}
+
+    if err := DeleteRawMaterial(ID); err != nil {
+    	return c.JSON(http.StatusInternalServerError, "Error while removing raw material!")
+    }
+
+    return c.JSON(http.StatusOK, "Raw material sucessfully deleted!")
+}

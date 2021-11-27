@@ -88,3 +88,49 @@ func OneRawMaterial(id uint64) (*raw_material, error){
 
 	return &raw, nil
 }
+
+func UpdateRawMaterial(id uint64, raw *raw_material) error{
+	db, error := database.Connect()
+	if error != nil {
+		fmt.Println("Error while connecting to the database: ",error)
+		return error
+	}
+	defer db.Close()
+
+	statement, error := db.Prepare("UPDATE materia_prima SET nome = ?, estoque = ? WHERE id = ?")
+	if error != nil {
+		fmt.Println("Error while creating statement: ",error)
+		return error
+	}
+	defer statement.Close()
+
+	if _, error := statement.Exec(raw.Name, raw.Inventory, id); error != nil {
+		fmt.Println("Error while executing statement: ",error)
+		return error
+	}
+
+	return nil
+}
+
+func DeleteRawMaterial(id uint64) error {
+	db, error := database.Connect()
+	if error != nil {
+		fmt.Println("Error while connecting to the database: ",error)
+		return error
+	}
+	defer db.Close()
+
+	statement, error := db.Prepare("DELETE FROM materia_prima WHERE id = ?")
+	if error != nil {
+		fmt.Println("Error while preparing statement: ",error)
+		return error
+	}
+	defer statement.Close()
+
+	if _, error := statement.Exec(id); error != nil {
+		fmt.Println("Error while deleting raw material: ",error)
+		return error
+	}
+
+	return nil
+}
