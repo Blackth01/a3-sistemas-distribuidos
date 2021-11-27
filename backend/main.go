@@ -1,44 +1,18 @@
 package main
 
 import (
-	"fmt"
-	"log"
-
-	"github.com/Blackth01/a3-sistemas-distribuidos/database"
+	"github.com/labstack/echo/v4"
+	"github.com/Blackth01/a3-sistemas-distribuidos/raw_material"
 )
 
 func main() {
-	db, erro := database.Connect()
+	e := echo.New()
 
-	if erro != nil {
-		log.Fatal(erro)
-	}
-	defer db.Close()
+	// Routes
+	e.POST("/raw_material", raw_material.CreateRawMaterial)
+	e.GET("/raw_material", raw_material.GetRawMaterials)
+    e.GET("/raw_material/:id", raw_material.GetRawMaterial)
 
-	fmt.Println("A conexão está aberta!")
-
-	linhas, erro := db.Query("SELECT nome FROM materia_prima LIMIT 1")
-
-	if erro != nil {
-		log.Fatal(erro)
-	}
-
-	defer linhas.Close()
-
-	var materiaPrimas []struct {
-		Name string `json:"nome"`
-	}
-
-	for linhas.Next() {
-		var cdd struct {
-			Name string `json:"nome"`
-		}
-		if err := linhas.Scan(&cdd.Name); err != nil {
-			return
-		}
-		materiaPrimas = append(materiaPrimas, cdd)
-	}
-
-	fmt.Println("FINISHED")
-	fmt.Println(materiaPrimas)
+	// Start server
+	e.Logger.Fatal(e.Start(":9000"))
 }
