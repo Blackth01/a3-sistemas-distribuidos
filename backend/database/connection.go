@@ -8,6 +8,7 @@ import (
 
 func Connect() (*sql.DB, error) {
 	stringConnection := "root:root@tcp(db:3306)/fabrica?charset=utf8&parseTime=True&loc=Local"
+
 	db, error := sql.Open("mysql", stringConnection)
 
 	if error != nil {
