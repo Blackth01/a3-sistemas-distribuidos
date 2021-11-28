@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/Blackth01/a3-sistemas-distribuidos/raw_material"
 	"github.com/Blackth01/a3-sistemas-distribuidos/product"
+	"github.com/Blackth01/a3-sistemas-distribuidos/input"
 )
 
 func main() {
@@ -13,6 +14,7 @@ func main() {
 	e.POST("/raw_material", raw_material.CreateRawMaterial)
 	e.GET("/raw_material", raw_material.GetRawMaterials)
     e.GET("/raw_material/:id", raw_material.GetRawMaterial)
+    e.GET("/raw_material/by_product/:id", raw_material.GetRawMaterialsByProduct)
     e.PUT("/raw_material/:id", raw_material.PutRawMaterial)
     e.DELETE("/raw_material/:id", raw_material.RemoveRawMaterial)
 
@@ -22,6 +24,11 @@ func main() {
     e.GET("/product/:id", product.GetProduct)
     e.PUT("/product/:id", product.PutProduct)
     e.DELETE("/product/:id", product.RemoveProduct)
+
+    // Input relation routes
+	e.POST("/input", input.CreateInput)
+    e.PUT("/input", input.PutInput)
+    e.DELETE("/input", input.RemoveInput)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":9000"))

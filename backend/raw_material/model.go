@@ -63,6 +63,36 @@ func AllRawMaterials() ([]raw_material, error){
 	return raw_materials, nil
 }
 
+func AllRawMaterialsByProduct(id_produto uint64) ([]raw_material_input, error){
+	db, error := database.Connect()
+	if error != nil {
+		fmt.Println("Error while connecting to the database!")
+		return nil, error
+	}
+	defer db.Close()
+
+	lines, error := db.Query("SELECT m.id, m.nome, m.estoque, i.quantidade FROM materia_prima m, insumo i WHERE m.id=i.id_materia_prima AND i.id_produto = ?",id_produto)
+	if error != nil {
+		fmt.Println("Error while getting raw materials by product: ",error)
+		return nil, error
+	}
+	defer lines.Close()
+
+	var raw_materials []raw_material_input
+	for lines.Next() {
+		var raw raw_material_input
+
+		if error := lines.Scan(&raw.ID, &raw.Name, &raw.Inventory, &raw.Quantity); error != nil {
+			fmt.Println("Error while scanning raw material by product: ",error)
+			return nil, error
+		}
+
+		raw_materials = append(raw_materials, raw)
+	}
+
+	return raw_materials, nil
+}
+
 func OneRawMaterial(id uint64) (*raw_material, error){
 	db, error := database.Connect()
 	if error != nil {

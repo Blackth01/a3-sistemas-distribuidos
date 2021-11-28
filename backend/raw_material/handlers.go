@@ -13,6 +13,13 @@ type raw_material struct {
 	Inventory uint64 `json:"inventory"`
 }
 
+type raw_material_input struct {
+	ID    uint64 `json:"id"`
+	Name  string `json:"name"`
+	Inventory uint64 `json:"inventory"`
+	Quantity uint64 `json:"quantity"`
+}
+
 func CreateRawMaterial(c echo.Context) error {
     raw := new(raw_material)
 
@@ -33,6 +40,21 @@ func GetRawMaterials(c echo.Context) error{
 
 	if error != nil{
 		return c.JSON(http.StatusInternalServerError, "Error while geting raw materials!")
+	}
+
+	return c.JSON(http.StatusOK, raws)
+}
+
+func GetRawMaterialsByProduct(c echo.Context) error {
+	ID, error := strconv.ParseUint(c.Param("id"), 10, 64)
+	if error != nil {
+		return c.JSON(http.StatusInternalServerError, "Error while converting id to integer!")
+	}
+
+	raws, error := AllRawMaterialsByProduct(ID)
+
+	if error != nil{
+		return c.JSON(http.StatusInternalServerError, "Error while geting raw materials by product!")
 	}
 
 	return c.JSON(http.StatusOK, raws)
