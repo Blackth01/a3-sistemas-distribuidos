@@ -10,12 +10,14 @@ import (
 )
 
 type Report struct {
-	product []struct {
-		ID       uint64
-		Name     string
-		Quantity uint64
-	}
-	rest []MaterialRest
+	product []*ProductReport
+	rest    []*MaterialRest
+}
+
+type ProductReport struct {
+	ID       uint64
+	Name     string
+	Quantity uint64
 }
 
 type MaterialRest struct {
@@ -63,7 +65,7 @@ func GetFullReport() (*Report, error) {
 	fmt.Println("Raw Materials: ", rawMaterials)
 
 	report := &Report{}
-	var rest []*MaterialRest = []*MaterialRest{}
+	// var rest []*MaterialRest = []*MaterialRest{}
 	for _, product := range products {
 		// Just do the magic
 		inputsIdsList := []uint64{}
@@ -91,31 +93,44 @@ func GetFullReport() (*Report, error) {
 			inputsQtyList = append(inputsQtyList, parsedQty)
 		}
 
-		quantity := 0
-		// Precisa fazer isso contar a quantidade de peças pra fazer, então
-		// faz rawMaterial % quantidade necessária pra peça
-		// Depois pra conseguir a quantidade de peças que vai fazer
-		// só pegar o valor do resto (rawMaterial % quantidade) e diminuir o total de rawMaterial
-		// Aí divide pelo valor necessário pra fazer a peça, pronto, tem seu relatório
-		// E fazer com que o for quebre quanto não tiver mais obra prima
-		for _, material := range rawMaterials {
-			for index := range inputsIdsList {
+		quantityByInputId := map[uint64]uint64{}
+		restByInputId := map[uint64]uint64{}
+		for index := range inputsIdsList {
+			for _, material := range rawMaterials {
 				if material.Inventory >= inputsQtyList[index] {
-					for i, restMaterial := range rest {
-						if restMaterial.RawMaterialId == inputsIdsList[index] {
-							rest[i] = &MaterialRest{
-								RawMaterialId: material.ID,
-								Name:          material.Name,
-								Quantity:      uint64(quantity),
-							}
-						}
-					}
+					rest := material.Inventory % inputsQtyList[index]
+					quantityOfItems := (material.Inventory - rest) / inputsQtyList[index]
+					quantityByInputId[inputsIdsList[index]] = quantityOfItems
+					restByInputId[inputsIdsList[index]] = rest
+				} else {
+					quantityByInputId[inputsIdsList[index]] = 0
 				}
 			}
 		}
+
+		minorQuantity := uint64(0)
+		hasMaterialsEnough := true
+		for _, quantityByInputId := range quantityByInputId {
+			if quantityByInputId <= 0 {
+				hasMaterialsEnough = false
+			} else {
+				if quantityByInputId < minorQuantity {
+					minorQuantity = quantityByInputId
+				}
+			}
+		}
+
+		if hasMaterialsEnough {
+			report.product = append(report.product, &ProductReport{
+				ID:       product.ID,
+				Name:     product.Name,
+				Quantity: minorQuantity,
+			})
+		}
 	}
 
-	return &Report{}, nil
+	fmt.Printf("%+v\n", report)
+	return report, nil
 }
 
 func GetAllProductsWithInputs(db *sql.DB) ([]productWithInput, error) {
