@@ -9,7 +9,8 @@ func main() {
 	e := echo.New()
 
 	// Routes
-	e.GET("/report", report.GetReport)
+	e.GET("/report/all", report.GetReportAllProducts)
+	e.GET("/report/valuable", report.GetReportOnlyValuable)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":9001"))

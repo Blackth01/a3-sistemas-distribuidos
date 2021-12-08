@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Blackth01/a3-sistemas-distribuidos/backend-reports/database"
+	"github.com/Blackth01/a3-sistemas-distribuidos/database"
 )
 
 

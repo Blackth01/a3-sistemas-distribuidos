@@ -5,6 +5,7 @@ import (
 	"github.com/Blackth01/a3-sistemas-distribuidos/raw_material"
 	"github.com/Blackth01/a3-sistemas-distribuidos/product"
 	"github.com/Blackth01/a3-sistemas-distribuidos/input"
+	"github.com/Blackth01/a3-sistemas-distribuidos/report"
 )
 
 func main() {
@@ -29,6 +30,10 @@ func main() {
 	e.POST("/input", input.CreateInput)
     e.PUT("/input", input.PutInput)
     e.DELETE("/input", input.RemoveInput)
+
+    // Report routes
+	e.GET("/report/all", report.GetReportAllProducts)
+	e.GET("/report/valuable", report.GetReportOnlyValuable)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":9000"))
