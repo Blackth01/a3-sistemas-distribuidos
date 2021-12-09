@@ -7,8 +7,7 @@ import (
 )
 
 func Connect() (*sql.DB, error) {
-	//stringConnection := "root:root@tcp(db:3306)/fabrica?charset=utf8&parseTime=True&loc=Local"
-	stringConnection := "thiago:@/fabrica?charset=utf8&parseTime=True&loc=Local"
+	stringConnection := "root:root@tcp(db:3306)/fabrica?charset=utf8&parseTime=True&loc=Local"
 
 	db, error := sql.Open("mysql", stringConnection)
 
