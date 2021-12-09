@@ -3,6 +3,7 @@ import { Box, Button, ButtonGroup, Container, Typography } from "@mui/material";
 import Products from "./pages/Products";
 import RawMaterials from "./pages/RawMaterial";
 import Inputs from "./pages/Inputs";
+import Reports from "./pages/Reports";
 
 function App() {
   // products | raw_material | inputs
@@ -32,6 +33,8 @@ function App() {
             Matéria Prima
           </Button>
           <Button onClick={() => handleChangePage("inputs")}>Insumos</Button>
+          <Button onClick={() => handleChangePage("report_all")}>Relatório total</Button>
+          <Button onClick={() => handleChangePage("report_valuable")}>Relatório mais valiosos</Button>
         </ButtonGroup>
       </Box>
       <Box>
@@ -40,8 +43,12 @@ function App() {
             return <Products />;
           } else if (currentPage === "raw_material") {
             return <RawMaterials />;
-          } else {
+          } else if (currentPage === "inputs"){
             return <Inputs />;
+          } else if(currentPage === "report_all"){
+            return <Reports reportType={"all"} />;
+          } else if(currentPage === "report_valuable"){
+            return <Reports reportType={"valuable"} />;
           }
         })()}
       </Box>
