@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Box, Button, ButtonGroup, Container, Typography } from "@mui/material";
 import Products from "./pages/Products";
+import RawMaterials from "./pages/RawMaterial";
 
 function App() {
   // products | raw_material | inputs
@@ -32,7 +33,17 @@ function App() {
           <Button onClick={() => handleChangePage("inputs")}>Insumos</Button>
         </ButtonGroup>
       </Box>
-      <Box>{currentPage === "products" && <Products />}</Box>
+      <Box>
+        {(() => {
+          if (currentPage === "products") {
+            return <Products />;
+          } else if (currentPage === "raw_material") {
+            return <RawMaterials />;
+          } else {
+            return null;
+          }
+        })()}
+      </Box>
     </Container>
   );
 }
