@@ -26,32 +26,6 @@ func CreateInput(c echo.Context) error {
 	return c.JSON(http.StatusCreated, "Input relation sucessfully added!")
 }
 
-/*
-func GetInputs(c echo.Context) error{
-	raws, error := AllInputs()
-
-	if error != nil{
-		return c.JSON(http.StatusInternalServerError, "Error while geting raw materials!")
-	}
-
-	return c.JSON(http.StatusOK, raws)
-}
-
-func GetInput(c echo.Context) error{
-	ID, error := strconv.ParseUint(c.Param("id"), 10, 64)
-	if error != nil {
-		return c.JSON(http.StatusInternalServerError, "Error while converting id to integer!")
-	}
-
-	raw, error := OneInput(ID)
-
-	if error != nil {
-	    return c.JSON(http.StatusInternalServerError, "Error while getting raw material!")	
-	}
-
-	return c.JSON(http.StatusOK, raw)
-}
-*/
 func PutInput(c echo.Context) error{
     inp := new(input)
 

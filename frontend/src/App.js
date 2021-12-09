@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Box, Button, ButtonGroup, Container, Typography } from "@mui/material";
 import Products from "./pages/Products";
 import RawMaterials from "./pages/RawMaterial";
+import Inputs from "./pages/Inputs";
 
 function App() {
   // products | raw_material | inputs
@@ -40,7 +41,7 @@ function App() {
           } else if (currentPage === "raw_material") {
             return <RawMaterials />;
           } else {
-            return null;
+            return <Inputs />;
           }
         })()}
       </Box>
